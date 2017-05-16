@@ -20,6 +20,8 @@ using namespace std;
 #include "../Camara.h"
 #include "../Object.h"
 #include "../material.h"
+#include "../Model.h"
+#include "../Mesh.h"
 
 const GLint WIDTH = 800, HEIGHT = 600; //Dimensiones de la ventana que creamos mas adelante
 
@@ -211,6 +213,7 @@ int main() {
 	Shader *lightShader = new Shader("./src/VertexLight.vertexshader", simplePath); //<- Cambiar el tipo de fragshader segun disponibles arriba: Se trata del shader de reflejos de luz sobre objetos
 	//Shader especifico para el cubo emisor de luz:
 	Shader emitterShader = Shader::Shader("./src/VertexEmitter.vertexshader", "./src/FragmentEmitter.fragmentshader"); //Color base, solo para el cubo de la luz
+	Shader tryshad("./src/VertexLight.vertexshader", "./src/FragmentEmitter.fragmentshader");
 
 	//Generating cube object with first transformations:
 	vec3 cubeScale = vec3(1.f, 1.f, 1.f);
@@ -227,6 +230,9 @@ int main() {
 	Material material("./Materials/difuso.png", "./Materials/especular.png", 16);
 
 	material.SetMaterial(lightShader); //Pasar el shader por referencia a la clase material que le asigna una textura difusa y especular.
+
+	// Modelos
+	Model garden("./OBJs/ChaoGarden/ChaoGarden.obj");
 
 	//BUCLE DE DIBUJO:
 	while (!glfwWindowShouldClose(window))
@@ -318,9 +324,15 @@ int main() {
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
 		//DIBUJAR CUBO DE LUZ:
 		lightCube.drawCube();
+
+		tryshad.USE();
+		
+		GLint colorLoc = glGetUniformLocation(tryshad.Program, "color");
+		glUniform3f(objectColorLoc, 0.5f, 0.5f, 0.5f); //Enviar Color del objeto
+		garden.Draw(tryshad, GL_STATIC_DRAW);
+		
 
 		//Cambia framebuffer por buffer de ventana:
 		glfwSwapBuffers(window);
