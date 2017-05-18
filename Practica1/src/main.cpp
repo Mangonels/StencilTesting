@@ -20,6 +20,8 @@ using namespace std;
 #include "../Camara.h"
 #include "../Object.h"
 #include "../material.h"
+#include "../Model.h"
+#include "../Mesh.h"
 
 const GLint WIDTH = 800, HEIGHT = 600; //Dimensiones de la ventana que creamos mas adelante
 
@@ -206,7 +208,7 @@ int main() {
 	const GLchar* simplePath = "./src/FragmentLight.fragmentshader"; //Luces ambiental, Difusa y Especular combinadas (Phong)
 	const GLchar* directionalPath = "./src/FragmentDirectionalLight.fragmentshader"; //Luz direccional
 	const GLchar* pointPath = "./src/FragmentPointLight.fragmentshader"; //Luz puntual
-	const GLchar* spotPath = "./src/FragmentSpotLight.fragmentshader"; //Luz focal														  
+	const GLchar* spotPath = "./src/FragmentSpotLight.fragmentshader"; //Luz focal
 	//Shader para objetos:
 	Shader *lightShader = new Shader("./src/VertexLight.vertexshader", simplePath); //<- Cambiar el tipo de fragshader segun disponibles arriba: Se trata del shader de reflejos de luz sobre objetos
 	//Shader especifico para el cubo emisor de luz:
@@ -227,6 +229,10 @@ int main() {
 	Material material("./Materials/difuso.png", "./Materials/especular.png", 16);
 
 	material.SetMaterial(lightShader); //Pasar el shader por referencia a la clase material que le asigna una textura difusa y especular.
+
+	// Modelos
+	Model gba("./OBJs/GBASP/gbasp.obj");
+	Model pk1("./OBJs/NewPoke/Cynda/DolHinoarashi.obj");
 
 	//BUCLE DE DIBUJO:
 	while (!glfwWindowShouldClose(window))
@@ -299,6 +305,8 @@ int main() {
 		
 		//DIBUJAR CUBO:
 		cube.drawCube();
+		//gba.Draw(*lightShader, GL_STATIC_DRAW);
+		pk1.Draw(*lightShader, GL_STATIC_DRAW);
 
 		//Aplicar emitterShader (Shader especifico cubo emisor de luz)
 		emitterShader.USE();
@@ -318,9 +326,10 @@ int main() {
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
 		//DIBUJAR CUBO DE LUZ:
 		lightCube.drawCube();
+		
+		
 
 		//Cambia framebuffer por buffer de ventana:
 		glfwSwapBuffers(window);

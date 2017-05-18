@@ -27,6 +27,6 @@ void main(){
 							//Invertir una matriz es una accion costosa! Evitar a toda costa!
 							
 	//Pasando coordenadas de textura:
-	textureCoords = vec2(texCoord.x, 1.0f - texCoord.y); //Esto invierte la imagen, restando la altura de una textura (1) a la altura en Y del vertice de textura: 1- Y		
+	//textureCoords = vec2(texCoord.x, 1.0f - texCoord.y); //Esto invierte la imagen, restando la altura de una textura (1) a la altura en Y del vertice de textura: 1- Y		
 }
 
