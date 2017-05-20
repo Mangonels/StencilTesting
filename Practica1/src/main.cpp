@@ -28,7 +28,7 @@ const GLint WIDTH = 800, HEIGHT = 600; //Dimensiones de la ventana que creamos m
 
 //Invocación de la clase camara, para todas las funcionalidades de camara necesarias:
 //Los 2 primeros valores son puntos con los que la clase forma los vectores que necesitamos para la camara:
-Camara* camara = new Camara(glm::vec3(0.0f, 0.0f, 3.0f), glm::vec3(0.0f, 0.0f, -1.0f), 0.1f, 60.0f); //Posicion, Direccion, Sensibilidad de camara, fov de camara.
+Camara* camara = new Camara(glm::vec3(0.0f, 3.0f, 0.0f), glm::vec3(0.0f, 0.0f, 1.0f), 0.1f, 60.0f); //Posicion, Direccion, Sensibilidad de camara, fov de camara.
 
 //Definicion inicial de funciones manager de inputs:
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode); //Funcion rasteadora de inputs por teclado en la ventana 
@@ -226,9 +226,9 @@ int main() {
 	Object lightCube(lightCubeScale, lightCubeRotate, lightPos); //CUBE B, la posicion es la posicion de la luz definida globalmente.
 
 	//Generacion de material:
-	Material material("./Materials/difuso.png", "./Materials/especular.png", 16);
+	//Material material("./Materials/difuso.png", "./Materials/especular.png", 16);
 
-	material.SetMaterial(lightShader); //Pasar el shader por referencia a la clase material que le asigna una textura difusa y especular.
+	//material.SetMaterial(lightShader); //Pasar el shader por referencia a la clase material que le asigna una textura difusa y especular.
 
 	// Modelos
 	Model gba("./OBJs/GBASP/gbasp.obj");
@@ -259,8 +259,8 @@ int main() {
 
 		//Aplicar lightShader (Shader especifico cubo):
 		lightShader->USE(); //Shaders para el CUBO
-		material.SetShininess(lightShader); //Pasar el shader por referencia a la clase material que le asigna el valor de brillo
-		material.ActivateTextures();
+		//material.SetShininess(lightShader); //Pasar el shader por referencia a la clase material que le asigna el valor de brillo
+		//material.ActivateTextures();
 			//Localizando las variables uniform de color del shader de luces, e inicializandolas mediante transferencia:
 			//-------------------------
 			GLint objectColorLoc = glGetUniformLocation(lightShader->Program, "objectColor");
@@ -294,12 +294,14 @@ int main() {
 			GLint projLoc = glGetUniformLocation(lightShader->Program, "projection");
 			GLint modelLoc = glGetUniformLocation(lightShader->Program, "model");
 
+			glm::mat4 originMatrix; //Una matriz con sus valores en 0 (Para resetear la matriz modelo)
+
 			//Matriz Vista:
 			glm::mat4 view = camara->LookAt(); //Trasladamos la escena en la dirección contraria hacia donde queremos mover la camara, causando el efecto de que la camara se ha movido:
 			//Matriz Proyeccion:
 			glm::mat4 projection = glm::perspective(glm::radians(camara->GetFOV()), (float)(screenWidth / screenHeight), 0.1f, 100.0f); //angulo de fov, tamaño pantalla (tiene que ser un float), plano near, plano far.
 			//Matriz Modelo:
-			glm::mat4 model = cube.generateModelMatrix(); //La matriz modelo la define el generador de matriz del cubo.
+			glm::mat4 model; //La matriz modelo la define el generador de matriz del cubo.
 
 			//Enviar matrices a sus localizaciones:
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -307,23 +309,42 @@ int main() {
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		
 		//DIBUJAR CUBO:
-		cube.drawCube();
+		//cube.drawCube();
+		
+		//DIBUJAR GBA SP:
 		gba.Draw(*lightShader, GL_STATIC_DRAW);
 
-		model = glm::translate(model, glm::vec3(-2, 4, -6));
+		model = originMatrix; //Reset matriz modelo
+
+		//DIBUJAR BULBASAUR:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
 		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
 		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-
+		//Dibujar:
 		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
 
-		model = glm::translate(model, glm::vec3(20, 0, 9));
+		model = originMatrix; //Reset matriz modelo
+
+		//DIBUJAR CHARMANDER:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
+		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.107, 0.107, 0.107));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Dibujar:
 		charmander.Draw(*lightShader, GL_STATIC_DRAW);
 
-		model = glm::translate(model, glm::vec3(18, 0, 9));
-		model = glm::rotate(model, glm::radians(-50.0f), glm::vec3(0, 1, 0));
+		model = originMatrix; //Reset matriz modelo
+
+		//DIBUJAR SQUIRTLE:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
+		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Dibujar:
 		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
 
 		//Aplicar emitterShader (Shader especifico cubo emisor de luz)

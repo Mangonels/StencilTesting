@@ -1,6 +1,6 @@
 ﻿  main.cpp
-c:\users\drecuenco\desktop\stenciltesting-master\practica1\camara.h(43): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\drecuenco\desktop\stenciltesting-master\practica1\camara.h(44): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\drecuenco\desktop\stenciltesting-master\practica1\src\main.cpp(247): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-  Proyecto.vcxproj -> C:\Users\drecuenco\Desktop\StencilTesting-master\Practica1\Debug\Practica1.exe
-  Proyecto.vcxproj -> C:\Users\drecuenco\Desktop\StencilTesting-master\Practica1\Debug\Practica1.pdb (Full PDB)
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(43): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(44): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(247): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+  Proyecto.vcxproj -> C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\Practica1.exe
+  Proyecto.vcxproj -> C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\Practica1.pdb (Full PDB)
