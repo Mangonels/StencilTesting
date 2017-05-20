@@ -232,7 +232,10 @@ int main() {
 
 	// Modelos
 	Model gba("./OBJs/GBASP/gbasp.obj");
-	Model pk1("./OBJs/NewPoke/Cynda/DolHinoarashi.obj");
+	Model charmander("./OBJs/NewPoke/Charmander/DolHitokage.obj");
+	Model bulbasaur("./OBJs/NewPoke/Bulbasaur/DolFushigidane.obj");
+	Model squirtle("./OBJs/NewPoke/Squirtle/squirtle.obj");
+	
 
 	//BUCLE DE DIBUJO:
 	while (!glfwWindowShouldClose(window))
@@ -305,8 +308,23 @@ int main() {
 		
 		//DIBUJAR CUBO:
 		cube.drawCube();
-		//gba.Draw(*lightShader, GL_STATIC_DRAW);
-		pk1.Draw(*lightShader, GL_STATIC_DRAW);
+		gba.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = glm::translate(model, glm::vec3(-2, 4, -6));
+		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+
+		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = glm::translate(model, glm::vec3(20, 0, 9));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		charmander.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = glm::translate(model, glm::vec3(18, 0, 9));
+		model = glm::rotate(model, glm::radians(-50.0f), glm::vec3(0, 1, 0));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
 
 		//Aplicar emitterShader (Shader especifico cubo emisor de luz)
 		emitterShader.USE();
