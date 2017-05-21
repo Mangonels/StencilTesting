@@ -23,14 +23,8 @@ using namespace std;
 #include "../Model.h"
 #include "../Mesh.h"
 
-//Para sqrt()
-#include <math.h>
-
 const GLint WIDTH = 800, HEIGHT = 600; //Dimensiones de la ventana que creamos mas adelante
 
-enum toStencil {
-	CHARMANDER, BULBASAUR, SQUIRTLE, NONE
-};
 
 //Invocación de la clase camara, para todas las funcionalidades de camara necesarias:
 //Los 2 primeros valores son puntos con los que la clase forma los vectores que necesitamos para la camara:
@@ -46,8 +40,6 @@ void mouse_scroll_input(GLFWwindow* window, double xOffset, double yOffset)
 {
 	camara->MouseScroll(xOffset, yOffset);
 }
-void drawStencil(toStencil whatToDraw, glm::mat4 model, Shader *lightShader, Shader stencilShader, Model charmander, Model bulbasaur, Model squirtle, Model charmanderStencil, Model bulbasaurStencil, Model squirtleStencil);
-toStencil selectPokemon(glm::vec3 camPos, glm::vec3 camDir);
 
 //Variables calculo de tiempo:
 GLfloat deltaTime = 0.0f;
@@ -66,7 +58,7 @@ float fovSens = 2.0f;
 float minFov = 20.0f;
 float maxFov = 80.0f;
 //Obtenemos posicion de la camara mediante metodo (Necesario para pasar a shaders mas abajo):
-glm::vec3 camaraPos = camara->getPosition();
+glm::vec3 camaraPos;
 
 //Variables cubos:
 
@@ -206,13 +198,6 @@ int main() {
 	int screenWidth, screenHeight;
 	glfwGetFramebufferSize(window, &screenWidth, &screenHeight);
 
-	// Opciones del Stencil Testing
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED); //Encapsula el ratón para que no pueda salir de las coordenadas internas a la ventana, y lo esconde.
 
 	//Activar Z-Buffer (Buffer de profundidad de fragmentos)
@@ -228,14 +213,12 @@ int main() {
 	Shader *lightShader = new Shader("./src/VertexLight.vertexshader", simplePath); //<- Cambiar el tipo de fragshader segun disponibles arriba: Se trata del shader de reflejos de luz sobre objetos
 	//Shader especifico para el cubo emisor de luz:
 	Shader emitterShader = Shader::Shader("./src/VertexEmitter.vertexshader", "./src/FragmentEmitter.fragmentshader"); //Color base, solo para el cubo de la luz
-	//Shader del Stencil
-	Shader stencilShader = Shader::Shader("./src/VertexStencil.vertexshader", "./src/FragmentStencil.fragmentshader");
 
 	//Generating cube object with first transformations:
-	vec3 cubeScale = vec3(1.f, 1.f, 1.f);
-	vec3 cubeRotate = vec3(1.f, 1.f, 1.f);
-	vec3 cubeTranslate = vec3(0.f, 0.f, 0.f);
-	Object cube(cubeScale, cubeRotate, cubeTranslate); //CUBE A
+	//vec3 cubeScale = vec3(1.f, 1.f, 1.f);
+	//vec3 cubeRotate = vec3(1.f, 1.f, 1.f);
+	//vec3 cubeTranslate = vec3(0.f, 0.f, 0.f);
+	//Object cube(cubeScale, cubeRotate, cubeTranslate); //CUBE A
 
 	//Generating light cube object with first transformations:
 	vec3 lightCubeScale = vec3(0.1f, 0.1f, 0.1f);
@@ -248,18 +231,12 @@ int main() {
 	//material.SetMaterial(lightShader); //Pasar el shader por referencia a la clase material que le asigna una textura difusa y especular.
 
 	// Modelos
+	Model skybox("./OBJs/SkyBox/SkyBox.obj");
+
 	Model gba("./OBJs/GBASP/gbasp.obj");
 	Model charmander("./OBJs/NewPoke/Charmander/DolHitokage.obj");
 	Model bulbasaur("./OBJs/NewPoke/Bulbasaur/DolFushigidane.obj");
 	Model squirtle("./OBJs/NewPoke/Squirtle/squirtle.obj");
-<<<<<<< HEAD
-
-	Model charmanderStencil("./OBJs/NewPoke/Stencil/charmander.obj");
-	Model squirtleStencil("./OBJs/NewPoke/Stencil/squirtle.obj");
-	Model bulbasaurStencil("./OBJs/NewPoke/Stencil/bulbasaur.obj");
-=======
->>>>>>> origin/master
-	
 
 	//BUCLE DE DIBUJO:
 	while (!glfwWindowShouldClose(window))
@@ -273,14 +250,16 @@ int main() {
 		prevFrame = currentFrame;
 		camara->SetDT(deltaTime); //Pasamos el delta time a la propiedad de la clase
 
+		//Actualizar posicion de la camara:
+		camaraPos = camara->getPosition();
+
 		//Mirar si se ha pulsado alguna tecla que mueva la posicion de la camara:
 		camara->DoMovement();
 
 		//Clearing color buffer array from OpenGL in order to ensure there is no colors being applied from last iteration:
 		//Also clearing Z-Buffer.
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-		
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		glClearColor(0.5f, 0.5f, 0.5f, 1.0f);
 
 		//Aplicar lightShader (Shader especifico cubo):
 		lightShader->USE(); //Shaders para el CUBO
@@ -311,8 +290,8 @@ int main() {
 
 			//Ahora hay que adaptar las matrices para este shader:
 			//Ajustes sobre las posiciones del cubo para generar adecuadamente la matriz modelo:
-			 cube.Rotate(glm::vec3(cubeRotateX, cubeRotateY, cubeRotateZ));
-			 cube.Translate(glm::vec3(cubeTranslate.x + cubePosOffsetX, cubeTranslate.y + cubePosOffsetY, cubeTranslate.z + cubePosOffsetZ)); //Cambiar posicion del cubo
+			 //cube.Rotate(glm::vec3(cubeRotateX, cubeRotateY, cubeRotateZ));
+			 //cube.Translate(glm::vec3(cubeTranslate.x + cubePosOffsetX, cubeTranslate.y + cubePosOffsetY, cubeTranslate.z + cubePosOffsetZ)); //Cambiar posicion del cubo
 
 			//Localizar donde van las matrices:
 			GLint viewLoc = glGetUniformLocation(lightShader->Program, "view");
@@ -332,34 +311,21 @@ int main() {
 			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 			glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-			stencilShader.USE();
-			glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
-			glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+		
 		//DIBUJAR CUBO:
 		//cube.drawCube();
-		
+
+		//DIBUJAR SKYBOX:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		//model = glm::translate(model, camaraPos); //Siempre seguira la posicion de la camara.
+		//model = glm::scale(model, glm::vec3(0.1f, 0.1f, 0.1f));
+		//Dibujar:
+		skybox.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = originMatrix; //Reset matriz modelo
+
 		//DIBUJAR GBA SP:
-<<<<<<< HEAD
-			lightShader->USE();
-		glStencilMask(0x00); // La gba no va a influir en el stencil por lo que su Mask se setea a 0x00
-		gba.Draw(*lightShader, GL_STATIC_DRAW);
-
-		drawStencil(selectPokemon(camara->getPosition(),camara->cameraFront), model, lightShader, stencilShader, charmander, bulbasaur, squirtle, charmanderStencil, bulbasaurStencil, squirtleStencil);
-
-		/*
-		model = originMatrix; //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
-		charmander.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = originMatrix; //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
-		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = originMatrix; //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
-		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);*/
-
-=======
+		//Dibujar:
 		gba.Draw(*lightShader, GL_STATIC_DRAW);
 
 		model = originMatrix; //Reset matriz modelo
@@ -394,7 +360,6 @@ int main() {
 		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
 		//Dibujar:
 		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
->>>>>>> origin/master
 
 		//Aplicar emitterShader (Shader especifico cubo emisor de luz)
 		emitterShader.USE();
@@ -445,217 +410,4 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 		keys[key] = true;
 	else if (action == GLFW_RELEASE)
 		keys[key] = false;
-}
-
-void drawStencil(toStencil whatToDraw, glm::mat4 model, Shader *lightShader, Shader stencilShader, Model charmander, Model bulbasaur, Model squirtle, Model charmanderStencil, Model bulbasaurStencil, Model squirtleStencil) {
-	switch (whatToDraw) {
-	case CHARMANDER:
-		model = glm::mat4(); //Reset matriz modelo
-		lightShader->USE();
-		//DIBUJAR BULBASAUR:
-		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-
-		//DIBUJAR SQUIRTLE:
-		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-
-							 //DIBUJAR BULBASAUR:
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
-		//Dibujar CHARMANDER:
-		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.107, 0.107, 0.107));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		charmander.Draw(*lightShader, GL_STATIC_DRAW);
-		glBindVertexArray(0);
-		
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		//glDisable(GL_DEPTH_TEST);
-		stencilShader.USE();
-		model = glm::mat4(); //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(1.6f, 4.24f, -6.2f));
-		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.117, 0.117, 0.117));
-		glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		charmanderStencil.Draw(stencilShader, GL_STATIC_DRAW);
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
-		glBindVertexArray(0);
-		break;
-
-	case BULBASAUR:
-		model = glm::mat4(); //Reset matriz modelo
-		lightShader->USE();
-		//DIBUJAR CHARMANDER:
-		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.107, 0.107, 0.107));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		charmander.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-
-							  //DIBUJAR SQUIRTLE:
-							  //Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-
-							  //DIBUJAR BULBASAUR:
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
-		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
-		glBindVertexArray(0);
-
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		//glDisable(GL_DEPTH_TEST);
-		stencilShader.USE();
-		model = glm::mat4(); //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(0.0f, 4.25f, -6.2f));
-		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.11, 0.11, 0.11));
-		glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		bulbasaurStencil.Draw(stencilShader, GL_STATIC_DRAW);
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
-		glBindVertexArray(0);
-		break;
-
-	case SQUIRTLE:
-		model = glm::mat4(); //Reset matriz modelo
-		lightShader->USE();
-		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
-		
-		model = glm::mat4(); //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.107, 0.107, 0.107));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		charmander.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilMask(0xFF);
-		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
-		glBindVertexArray(0);
-
-		model = glm::mat4(); //Reset matriz modelo
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		//glDisable(GL_DEPTH_TEST);
-		stencilShader.USE();
-		model = glm::translate(model, glm::vec3(-1.7f, 4.24f, -6.18f));
-		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.11, 0.11, 0.11));
-		glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		squirtleStencil.Draw(stencilShader, GL_STATIC_DRAW);
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
-		glBindVertexArray(0);
-		break;
-
-	case NONE:
-		model = glm::mat4(); //Reset matriz modelo
-		lightShader->USE();
-		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.107, 0.107, 0.107));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		charmander.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = glm::mat4(); //Reset matriz modelo
-		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
-		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
-		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
-		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
-		glUniformMatrix4fv(glGetUniformLocation(lightShader->Program, "model"), 1, GL_FALSE, glm::value_ptr(model));
-		//Dibujar:
-		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
-		glBindVertexArray(0);
-		break;
-	}
-}
-
-toStencil selectPokemon(glm::vec3 camPos, glm::vec3 camDir) {
-	float radius = 0.75f;
-
-	//camDir*(camPos-BALLPOS)^2 - glm::dot(camPos,BALLPOS)^2 - radius^2
-	printf("%f, %f, %f\n", camPos.x, camPos.y, camPos.z);
-	//sqrt(camDir*(camPos - BALLPOS)) - sqrt(glm::dot(camPos, BALLPOS)) - sqrt(radius)
-	glm::vec3 charmanderPos = glm::vec3(1.6f, 5.f, -6.2f);
-	glm::vec3 squirtlePos = glm::vec3(-1.7f, 5.f, -6.2f);
-	glm::vec3 bulbasaurPos = glm::vec3(0.0f, 5.f, -6.2f);
-
-	float tmp1Char = pow(glm::dot(camDir, (camPos - charmanderPos)), 2);
-	float tmp1Squirt = pow(glm::dot(camDir, (camPos - squirtlePos)), 2);
-	float tmp1Bulb = pow(glm::dot(camDir, (camPos - bulbasaurPos)), 2);
-
-	float lChar = glm::length(camPos - charmanderPos);
-	float lSquirt = glm::length(camPos - squirtlePos);
-	float lBulb = glm::length(camPos - bulbasaurPos);
-
-	float tmp2Char = pow(lChar, 2) - pow(radius, 2);
-	float tmp2Squirt = pow(lSquirt, 2) - pow(radius, 2);
-	float tmp2Bulb = pow(lBulb, 2) - pow(radius, 2);
-
-	// Charmander
-	if ((tmp1Char - tmp2Char) >= 0) {
-		return CHARMANDER;
-	}
-	// Squirtle
-	else if ((tmp1Squirt - tmp2Squirt) >= 0) {
-		return SQUIRTLE;
-	}
-	// Bulbasaur
-	else if ((tmp1Bulb - tmp2Bulb) >= 0) {
-		return BULBASAUR;
-	} else { return NONE; }
 }

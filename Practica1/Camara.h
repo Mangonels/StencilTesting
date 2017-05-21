@@ -34,10 +34,7 @@ public:
 private:
 	//Vectores necesarios para la camara:
 	glm::vec3 cameraPos;
-public:
-	//cameraFront en publico para si tener el vector dirección
 	glm::vec3 cameraFront;
-private:
 	glm::vec3 cameraUp;
 	//Variables de tiempo:
 	GLfloat Deltatime;

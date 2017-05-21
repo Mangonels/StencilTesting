@@ -1,14 +1,45 @@
 ﻿  main.cpp
-<<<<<<< HEAD
-c:\users\davidro\documents\github\stenciltesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\practica1\camara.h(46): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
-c:\users\davidro\documents\github\stenciltesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\practica1\camara.h(47): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
-c:\users\davidro\documents\github\stenciltesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\practica1\src\main.cpp(268): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-  Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\StencilTesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\Practica1\Debug\Practica1.exe
-  Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\StencilTesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\Practica1\Debug\Practica1.pdb (Full PDB)
-=======
 c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(43): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(44): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(247): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(248): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+LINK : warning LNK4098: defaultlib 'LIBCMT' conflicts with use of other libs; use /NODEFAULTLIB:library
+LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library
+Mesh.obj : warning LNK4049: locally defined symbol ___glewActiveTexture imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewBindBuffer imported
+Object.obj : warning LNK4049: locally defined symbol ___glewBindBuffer imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewBufferData imported
+Object.obj : warning LNK4049: locally defined symbol ___glewBufferData imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewGenBuffers imported
+Object.obj : warning LNK4049: locally defined symbol ___glewGenBuffers imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewEnableVertexAttribArray imported
+Object.obj : warning LNK4049: locally defined symbol ___glewEnableVertexAttribArray imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewGetUniformLocation imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewUniform1f imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewVertexAttribPointer imported
+Object.obj : warning LNK4049: locally defined symbol ___glewVertexAttribPointer imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewBindVertexArray imported
+Object.obj : warning LNK4049: locally defined symbol ___glewBindVertexArray imported
+Mesh.obj : warning LNK4049: locally defined symbol ___glewGenVertexArrays imported
+Object.obj : warning LNK4049: locally defined symbol ___glewGenVertexArrays imported
+Model.obj : warning LNK4049: locally defined symbol ___glewGenerateMipmap imported
+Object.obj : warning LNK4049: locally defined symbol ___glewDeleteBuffers imported
+Object.obj : warning LNK4049: locally defined symbol ___glewDeleteVertexArrays imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewAttachShader imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewCompileShader imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewCreateProgram imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewCreateShader imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewDeleteShader imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewGetProgramInfoLog imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewGetProgramiv imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewGetShaderInfoLog imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewGetShaderiv imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewLinkProgram imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewShaderSource imported
+Shader.obj : warning LNK4049: locally defined symbol ___glewUseProgram imported
+libSOIL.lib(image_DXT.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'libSOIL.lib(image_DXT.obj)' or at 'C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\SOIL.pdb'; linking object as if no debug info
+libSOIL.lib(image_helper.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'libSOIL.lib(image_helper.obj)' or at 'C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\SOIL.pdb'; linking object as if no debug info
+libSOIL.lib(SOIL.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'libSOIL.lib(SOIL.obj)' or at 'C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\SOIL.pdb'; linking object as if no debug info
+libSOIL.lib(stb_image_aug.obj) : warning LNK4099: PDB 'SOIL.pdb' was not found with 'libSOIL.lib(stb_image_aug.obj)' or at 'C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\SOIL.pdb'; linking object as if no debug info
+glew32s.lib(glew.obj) : warning LNK4099: PDB 'vc120.pdb' was not found with 'glew32s.lib(glew.obj)' or at 'C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\vc120.pdb'; linking object as if no debug info
   Proyecto.vcxproj -> C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\Practica1.exe
   Proyecto.vcxproj -> C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\Debug\Practica1.pdb (Full PDB)
->>>>>>> origin/master

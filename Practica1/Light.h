@@ -3,9 +3,11 @@
 #include <GL\glew.h>
 #include <glm.hpp>
 #include "Shader.h"
-#include<glm.hpp>
+#include <glm.hpp>
 #include <gtc\matrix_transform.hpp>
-//using namespace glm;
+#include <string>
+
+using namespace glm;
 
 class Light {
 public:
