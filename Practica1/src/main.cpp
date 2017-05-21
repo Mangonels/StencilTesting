@@ -252,10 +252,13 @@ int main() {
 	Model charmander("./OBJs/NewPoke/Charmander/DolHitokage.obj");
 	Model bulbasaur("./OBJs/NewPoke/Bulbasaur/DolFushigidane.obj");
 	Model squirtle("./OBJs/NewPoke/Squirtle/squirtle.obj");
+<<<<<<< HEAD
 
 	Model charmanderStencil("./OBJs/NewPoke/Stencil/charmander.obj");
 	Model squirtleStencil("./OBJs/NewPoke/Stencil/squirtle.obj");
 	Model bulbasaurStencil("./OBJs/NewPoke/Stencil/bulbasaur.obj");
+=======
+>>>>>>> origin/master
 	
 
 	//BUCLE DE DIBUJO:
@@ -336,6 +339,7 @@ int main() {
 		//cube.drawCube();
 		
 		//DIBUJAR GBA SP:
+<<<<<<< HEAD
 			lightShader->USE();
 		glStencilMask(0x00); // La gba no va a influir en el stencil por lo que su Mask se setea a 0x00
 		gba.Draw(*lightShader, GL_STATIC_DRAW);
@@ -355,6 +359,42 @@ int main() {
 		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
 		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);*/
 
+=======
+		gba.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = originMatrix; //Reset matriz modelo
+
+		//DIBUJAR BULBASAUR:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
+		model = glm::rotate(model, glm::radians(30.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Dibujar:
+		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = originMatrix; //Reset matriz modelo
+
+		//DIBUJAR CHARMANDER:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
+		model = glm::rotate(model, glm::radians(40.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.107, 0.107, 0.107));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Dibujar:
+		charmander.Draw(*lightShader, GL_STATIC_DRAW);
+
+		model = originMatrix; //Reset matriz modelo
+
+		//DIBUJAR SQUIRTLE:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
+		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Dibujar:
+		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
+>>>>>>> origin/master
 
 		//Aplicar emitterShader (Shader especifico cubo emisor de luz)
 		emitterShader.USE();
