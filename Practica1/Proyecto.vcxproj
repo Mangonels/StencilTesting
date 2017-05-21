@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camara.cpp" />
-    <ClCompile Include="Light.cpp" />
     <ClCompile Include="material.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="Model.cpp" />
@@ -30,7 +29,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camara.h" />
-    <ClInclude Include="Light.h" />
     <ClInclude Include="material.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="Model.h" />
