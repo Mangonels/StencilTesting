@@ -1,6 +1,6 @@
 ﻿  main.cpp
-c:\users\davidro\documents\github\stenciltesting\practica1\camara.h(43): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
-c:\users\davidro\documents\github\stenciltesting\practica1\camara.h(44): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
-c:\users\davidro\documents\github\stenciltesting\practica1\src\main.cpp(244): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
-  Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\StencilTesting\Practica1\Debug\Practica1.exe
-  Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\StencilTesting\Practica1\Debug\Practica1.pdb (Full PDB)
+c:\users\davidro\documents\github\stenciltesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\practica1\camara.h(46): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
+c:\users\davidro\documents\github\stenciltesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\practica1\camara.h(47): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
+c:\users\davidro\documents\github\stenciltesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\practica1\src\main.cpp(268): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
+  Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\StencilTesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\Practica1\Debug\Practica1.exe
+  Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\StencilTesting-051a6c4fbdafc065c1adc1515f6e22beec955b9a\Practica1\Debug\Practica1.pdb (Full PDB)
