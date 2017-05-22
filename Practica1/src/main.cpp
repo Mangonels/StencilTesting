@@ -267,6 +267,7 @@ int main() {
 
 		//DIBUJAR GBA SP:
 		lightShader->USE();
+<<<<<<< HEAD
 		
 		if (normalScene) {
 			glStencilMask(0x00); // La gba no va a influir en el stencil por lo que su Mask se setea a 0x00
@@ -301,6 +302,14 @@ int main() {
 			bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);
 
 			
+=======
+		glStencilMask(0x00); // La gba no va a influir en el stencil por lo que su Mask se setea a 0x00
+		gba.Draw(*lightShader, GL_STATIC_DRAW);
+
+		drawStencil(selectPokemon(camara->getPosition(),camara->cameraFront), model, lightShader, stencilShader, charmander, bulbasaur, squirtle, charmanderStencil, bulbasaurStencil, squirtleStencil);
+
+		model = originMatrix; //Reset matriz modelo
+>>>>>>> origin/master
 
 			model = originMatrix; //Reset matriz modelo
 
@@ -321,7 +330,18 @@ int main() {
 
 		model = originMatrix; //Reset matriz modelo
 
+<<<<<<< HEAD
 		
+=======
+		//DIBUJAR SQUIRTLE:
+		//Transformaciones previas de matriz modelo para ajustar posicion rotacion y escalado:
+		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
+		model = glm::rotate(model, glm::radians(-10.0f), glm::vec3(0, 1, 0));
+		model = glm::scale(model, glm::vec3(0.1, 0.1, 0.1));
+		glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+		//Dibujar:
+		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
+>>>>>>> origin/master
 
 		//Aplicar emitterShader (Shader especifico cubo emisor de luz)
 		emitterShader.USE();

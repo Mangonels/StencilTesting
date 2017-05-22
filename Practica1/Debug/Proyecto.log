@@ -1,6 +1,15 @@
 ﻿  main.cpp
+<<<<<<< HEAD
 c:\users\davidro\documents\github\dylanbug\practica1\camara.h(46): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
 c:\users\davidro\documents\github\dylanbug\practica1\camara.h(47): warning C4244: 'inicializando': conversión de 'int' a 'GLfloat'; posible pérdida de datos
 c:\users\davidro\documents\github\dylanbug\practica1\src\main.cpp(202): warning C4244: 'inicializando': conversión de 'double' a 'GLfloat'; posible pérdida de datos
   Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\DylanBug\Practica1\Debug\Practica1.exe
   Proyecto.vcxproj -> C:\Users\Davidro\Documents\GitHub\DylanBug\Practica1\Debug\Practica1.pdb (Full PDB)
+=======
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(46): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(47): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(212): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+  Light.cpp
+  Generating Code...
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\light.cpp(90): error C4716: 'Light::GetColor': must return a value
+>>>>>>> origin/master
