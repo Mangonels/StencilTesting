@@ -282,9 +282,6 @@ int main() {
 
 		drawStencil(selectPokemon(camara->getPosition(),camara->cameraFront), model, lightShader, stencilShader, charmander, bulbasaur, squirtle, charmanderStencil, bulbasaurStencil, squirtleStencil);
 
-
-		gba.Draw(*lightShader, GL_STATIC_DRAW);
-
 		model = originMatrix; //Reset matriz modelo
 
 		//DIBUJAR BULBASAUR:
