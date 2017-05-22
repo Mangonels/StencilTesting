@@ -1,7 +1,7 @@
 ﻿  main.cpp
 c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(46): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
 c:\users\dylan\desktop\localrepo\stenciltesting\practica1\camara.h(47): warning C4244: 'initializing': conversion from 'int' to 'GLfloat', possible loss of data
-c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(268): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
-c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(339): error C2059: syntax error: '<<'
-c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(359): error C2059: syntax error: '=='
-c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(394): error C2059: syntax error: '>>'
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\src\main.cpp(335): warning C4244: 'initializing': conversion from 'double' to 'GLfloat', possible loss of data
+  Light.cpp
+  Generating Code...
+c:\users\dylan\desktop\localrepo\stenciltesting\practica1\light.cpp(90): error C4716: 'Light::GetColor': must return a value

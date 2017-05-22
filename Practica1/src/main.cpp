@@ -22,6 +22,7 @@ using namespace std;
 #include "../material.h"
 #include "../Model.h"
 #include "../Mesh.h"
+//#include "../Light.h"
 
 //Para sqrt()
 #include <math.h>
@@ -66,7 +67,7 @@ float fovSens = 2.0f;
 float minFov = 20.0f;
 float maxFov = 80.0f;
 //Obtenemos posicion de la camara mediante metodo (Necesario para pasar a shaders mas abajo):
-glm::vec3 camaraPos = camara->getPosition();
+glm::vec3 camaraPos;
 
 //Variables cubos:
 
@@ -218,12 +219,17 @@ int main() {
 	//Activar Z-Buffer (Buffer de profundidad de fragmentos)
 	glEnable(GL_DEPTH_TEST); //Esto comprobará que las caras de los poligonos no se fuckeen una encima de la otra, asegurando mostrar con prioridad las que están más cerca de la camara.
 
-	//Crear shaders:
+	//--------------------
+	//CREACION DE SHADERS:
+	//--------------------
 	//Posibles directorios segun el tipo de iluminacion que queramos:
 	const GLchar* simplePath = "./src/FragmentLight.fragmentshader"; //Luces ambiental, Difusa y Especular combinadas (Phong)
 	const GLchar* directionalPath = "./src/FragmentDirectionalLight.fragmentshader"; //Luz direccional
 	const GLchar* pointPath = "./src/FragmentPointLight.fragmentshader"; //Luz puntual
 	const GLchar* spotPath = "./src/FragmentSpotLight.fragmentshader"; //Luz focal
+
+	const GLchar* allLights = "./src/FragmentShaderPhongTexture"; //Todas las luces que sean necesarias combinadas
+
 	//Shader para objetos:
 	Shader *lightShader = new Shader("./src/VertexLight.vertexshader", simplePath); //<- Cambiar el tipo de fragshader segun disponibles arriba: Se trata del shader de reflejos de luz sobre objetos
 	//Shader especifico para el cubo emisor de luz:
@@ -231,11 +237,69 @@ int main() {
 	//Shader del Stencil
 	Shader stencilShader = Shader::Shader("./src/VertexStencil.vertexshader", "./src/FragmentStencil.fragmentshader");
 
+	//------------
+	//CREAR LUCES:
+	//------------
+	//Luz direccional:
+	//vec3 directionalPos = vec3(0, 1, 0);
+	//vec3 directionalDir = vec3(0, 0, -1);
+	//vec3 directionalAmbient = vec3(1, 1, 1);
+	//vec3 directionalDiffuse = vec3(1, 1, 1);
+	//vec3 directionalSpecular = vec3(1, 1, 1);
+	//Light directionalLight(directionalPos, directionalDir, directionalAmbient, directionalDiffuse, directionalSpecular, DIRECTIONAL, 0);
+	//directionalLight.SetAtt(1.00f, 0.05f, 0.05f);
+
+	////Luces puntuales:
+	//vec3 point1Pos = vec3(-4, 0, 0);
+	//vec3 point1Dir = vec3(0, 0, 0);
+	//vec3 point1Ambient = vec3(0, 1, 0);
+	//vec3 point1Diffuse = vec3(0, 1, 0);
+	//vec3 point1Specular = vec3(0, 1, 0);
+	//Light pointLight1(point1Pos, point1Dir, point1Ambient, point1Diffuse, point1Specular, POINT, 0);
+	//pointLight1.SetAtt(1.00f, 0.05f, 0.05f);
+
+	//vec3 point2Pos = vec3(2, 0, 0);
+	//vec3 point2Dir = vec3(0, 0, 0);
+	//vec3 point2Ambient = vec3(0, 0, 1);
+	//vec3 point2Diffuse = vec3(0, 0, 1);
+	//vec3 point2Specular = vec3(0, 0, 1);
+	//Light pointLight2(point2Pos, point2Dir, point2Ambient, point2Diffuse, point2Specular, POINT, 1);
+	//pointLight2.SetAtt(1.00f, 0.05f, 0.05f);
+
+	////Luces focales:
+	//vec3 spot1Pos = vec3(-2, 0, 0);
+	//vec3 spot1Dir = vec3(0, -1, 0);
+	//vec3 spot1Ambient = vec3(0, 1, 1);
+	//vec3 spot1Diffuse = vec3(0, 1, 1);
+	//vec3 spot1Specular = vec3(0, 1, 1);
+	//Light spotLight1(spot1Pos, spot1Dir, spot1Ambient, spot1Diffuse, spot1Specular, SPOT, 0);
+	//spotLight1.SetAtt(1.00, 0.05, 0.05);
+	//spotLight1.SetAperture(20.0f, 30.0f);
+
+	//vec3 spot2Pos = vec3(-2, 0, 0);
+	//vec3 spot2Dir = vec3(0, -1, 0);
+	//vec3 spot2Ambient = vec3(0, 1, 1);
+	//vec3 spot2Diffuse = vec3(0, 1, 1);
+	//vec3 spot2Specular = vec3(0, 1, 1);
+	//Light spotLight2(spot2Pos, spot2Dir, spot2Ambient, spot2Diffuse, spot2Specular, SPOT, 1);
+	//spotLight2.SetAtt(1.00, 0.05, 0.05);
+	//spotLight2.SetAperture(10.0f, 20.0f);
+
+	//vec3 spot3Pos = vec3(-2, 0, 0);
+	//vec3 spot3Dir = vec3(0, -1, 0);
+	//vec3 spot3Ambient = vec3(0, 1, 1);
+	//vec3 spot3Diffuse = vec3(0, 1, 1);
+	//vec3 spot3Specular = vec3(0, 1, 1);
+	//Light spotLight3(spot3Pos, spot3Dir, spot3Ambient, spot3Diffuse, spot3Specular, SPOT, 2);
+	//spotLight3.SetAtt(1.00, 0.05, 0.05);
+	//spotLight3.SetAperture(10.0f, 20.0f);
+
+
 	//Generating cube object with first transformations:
-	vec3 cubeScale = vec3(1.f, 1.f, 1.f);
-	vec3 cubeRotate = vec3(1.f, 1.f, 1.f);
-	vec3 cubeTranslate = vec3(0.f, 0.f, 0.f);
-	Object cube(cubeScale, cubeRotate, cubeTranslate); //CUBE A
+	//vec3 cubeScale = vec3(1.f, 1.f, 1.f);
+	//vec3 cubeRotate = vec3(1.f, 1.f, 1.f);
+	//vec3 cubeTranslate = vec3(0.f, 0.f, 0.f);
+	//Object cube(cubeScale, cubeRotate, cubeTranslate); //CUBE A
 
 	//Generating light cube object with first transformations:
 	vec3 lightCubeScale = vec3(0.1f, 0.1f, 0.1f);
@@ -247,7 +311,9 @@ int main() {
 
 	//material.SetMaterial(lightShader); //Pasar el shader por referencia a la clase material que le asigna una textura difusa y especular.
 
-	// Modelos
+	//------------------
+	// CARGA DE MODELOS:
+	//------------------
 	Model gba("./OBJs/GBASP/gbasp.obj");
 	Model charmander("./OBJs/NewPoke/Charmander/DolHitokage.obj");
 	Model bulbasaur("./OBJs/NewPoke/Bulbasaur/DolFushigidane.obj");
@@ -257,8 +323,9 @@ int main() {
 	Model squirtleStencil("./OBJs/NewPoke/Stencil/squirtle.obj");
 	Model bulbasaurStencil("./OBJs/NewPoke/Stencil/bulbasaur.obj");
 	
-
+	//----------------
 	//BUCLE DE DIBUJO:
+	//----------------
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents(); //Comprobar si se ha activado algun evento y ejecutar la funcion correspondiente (Las hemos definido antes fuera del main)
@@ -269,6 +336,9 @@ int main() {
 		deltaTime = currentFrame - prevFrame;
 		prevFrame = currentFrame;
 		camara->SetDT(deltaTime); //Pasamos el delta time a la propiedad de la clase
+
+		//Actualizar posicion de la camara:
+		camaraPos = camara->getPosition();
 
 		//Mirar si se ha pulsado alguna tecla que mueva la posicion de la camara:
 		camara->DoMovement();
@@ -283,33 +353,19 @@ int main() {
 		lightShader->USE(); //Shaders para el CUBO
 		//material.SetShininess(lightShader); //Pasar el shader por referencia a la clase material que le asigna el valor de brillo
 		//material.ActivateTextures();
-			//Localizando las variables uniform de color del shader de luces, e inicializandolas mediante transferencia:
-			//-------------------------
-			GLint objectColorLoc = glGetUniformLocation(lightShader->Program, "objectColor");
-			GLint lightColorLoc = glGetUniformLocation(lightShader->Program, "lightColor");
-			GLint lightPosLoc = glGetUniformLocation(lightShader->Program, "lightPosition");
-			GLint lightDirPos = glGetUniformLocation(lightShader->Program, "lightDirection");
-			GLint lightSpotInnerCone = glGetUniformLocation(lightShader->Program, "innerConeRadius"); 
-			GLint lightSpotOuterCone = glGetUniformLocation(lightShader->Program, "outerConeRadius");
-			GLint viewPosLoc = glGetUniformLocation(lightShader->Program, "viewPos");
-			//glUniform3f(objectColorLoc, 1.0f, 0.5f, 0.31f); //Enviar Color del objeto
-			glUniform3f(lightColorLoc, 1.0f, 1.0f, 1.0f); //Enviar Color de la luz
-			glUniform3f(lightPosLoc, lightPos.x, lightPos.y, lightPos.z); //Enviar Posicion de la luz
-			glUniform3f(lightDirPos, lightDir.x, lightDir.y, lightDir.z); //Enviar Direccion para cualquier luz
-			glUniform1f(lightSpotInnerCone, spotLightInnerRadius); //Enviar angulo que determina el radio de apertura de la luz focal
-			glUniform1f(lightSpotOuterCone, spotLightOuterRadius); //Enviar angulo que determina el radio de apertura de la luz focal
-			glUniform3f(viewPosLoc, camaraPos.x, camaraPos.y, camaraPos.z); //Enviar Posicion de la camara
 
-			//Variables de calculo de atenuacion en point light:
-			glUniform1f(glGetUniformLocation(lightShader->Program, "constant"), constant);
-			glUniform1f(glGetUniformLocation(lightShader->Program, "linear"), linear);
-			glUniform1f(glGetUniformLocation(lightShader->Program, "quadratic"), quadratic);
-			//-------------------------
+		//Enviando datos sobre las luces generadas previamente al shader de luz (Frag):
+		//directionalLight.SetLight(lightShader, camaraPos);
+		//pointLight1.SetLight(lightShader, camaraPos);
+		//pointLight2.SetLight(lightShader, camaraPos);
+		//spotLight1.SetLight(lightShader, camaraPos);
+		//spotLight2.SetLight(lightShader, camaraPos);
+		//spotLight3.SetLight(lightShader, camaraPos);
 
 			//Ahora hay que adaptar las matrices para este shader:
 			//Ajustes sobre las posiciones del cubo para generar adecuadamente la matriz modelo:
-			 cube.Rotate(glm::vec3(cubeRotateX, cubeRotateY, cubeRotateZ));
-			 cube.Translate(glm::vec3(cubeTranslate.x + cubePosOffsetX, cubeTranslate.y + cubePosOffsetY, cubeTranslate.z + cubePosOffsetZ)); //Cambiar posicion del cubo
+			 //cube.Rotate(glm::vec3(cubeRotateX, cubeRotateY, cubeRotateZ));
+			 //cube.Translate(glm::vec3(cubeTranslate.x + cubePosOffsetX, cubeTranslate.y + cubePosOffsetY, cubeTranslate.z + cubePosOffsetZ)); //Cambiar posicion del cubo
 
 			//Localizar donde van las matrices:
 			GLint viewLoc = glGetUniformLocation(lightShader->Program, "view");
@@ -332,6 +388,7 @@ int main() {
 			stencilShader.USE();
 			glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "view"), 1, GL_FALSE, glm::value_ptr(view));
 			glUniformMatrix4fv(glGetUniformLocation(stencilShader.Program, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+
 		//DIBUJAR CUBO:
 		//cube.drawCube();
 		
@@ -341,19 +398,6 @@ int main() {
 		gba.Draw(*lightShader, GL_STATIC_DRAW);
 
 		drawStencil(selectPokemon(camara->getPosition(),camara->cameraFront), model, lightShader, stencilShader, charmander, bulbasaur, squirtle, charmanderStencil, bulbasaurStencil, squirtleStencil);
-
-		/*
-		model = originMatrix; //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(1.6f, 4.3f, -6.2f));
-		charmander.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = originMatrix; //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(-1.7f, 4.3f, -6.2f));
-		squirtle.Draw(*lightShader, GL_STATIC_DRAW);
-
-		model = originMatrix; //Reset matriz modelo
-		model = glm::translate(model, glm::vec3(0.0f, 4.3f, -6.2f));
-		bulbasaur.Draw(*lightShader, GL_STATIC_DRAW);*/
 
 		gba.Draw(*lightShader, GL_STATIC_DRAW);
 
