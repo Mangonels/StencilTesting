@@ -1,6 +1,2 @@
 #TargetFrameworkVersion=v4.0:PlatformToolSet=v140:EnableManagedIncrementalBuild=false:VCToolArchitecture=Native32Bit:WindowsTargetPlatformVersion=8.1
-<<<<<<< HEAD
-Debug|Win32|C:\Users\Davidro\Documents\GitHub\DylanBug\Practica1\|
-=======
-Debug|Win32|C:\Users\dylan\Desktop\LocalRepo\StencilTesting\Practica1\|
->>>>>>> origin/master
+Debug|Win32|C:\Users\drecuenco\Desktop\Practica1\|

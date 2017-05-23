@@ -1,0 +1,20 @@
+# Material file for gbasp.obj
+
+newmtl AGS_Mat0
+	Ns 0
+	d 1
+	illum 2
+	Kd 0.909804 0.909804 0.909804
+	Ks 0.0 0.0 0.0
+	Ka 0.0 0.0 0.0
+	map_Kd AGS_Mat0.png
+
+newmtl AGS_Mat1
+	Ns 0
+	d 1
+	illum 2
+	Kd 0.972549 0.972549 0.972549
+	Ks 0.0 0.0 0.0
+	Ka 0.0 0.0 0.0
+	map_Kd AGS_Mat1.png
+

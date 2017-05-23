@@ -1,0 +1,59 @@
+#version 330 core
+
+//input data:
+
+in vec2 textureCoords;
+in vec3 FragPos;
+in vec3 Normal;
+
+// Ouput data:
+
+out vec4 color;
+
+//uniform sampler2D laTextura; //Recibiria una textura
+
+uniform vec3 objectColor;
+uniform vec3 lightColor;
+uniform vec3 lightPosition;
+uniform vec3 viewPos;
+
+struct Material
+{
+	sampler2D diffuse;
+	sampler2D specular;
+	float shininess;
+};
+
+uniform Material elMaterial; //Esto es una instancia de Material que puede contener las propiedades del struct predefinio. La estamos rellenando desde el objeto "material" que se encarga de pasar texturas.
+
+void main(){
+	//Algunos metodos para dar color/luz/textura al objeto:
+	
+	//1.Aplicar una sola textura como color:
+    //color = texture(laTextura, textureCoords); //texture sampler, texture coordinate
+	
+	//2.El color que refleja un objeto es igual al color de la luz por el color del objeto:
+	//color = vec4(lightColor * objectColor, 1.0f);
+	
+	//3.Calculo Iluminacion ambiental como color (Se aplica un paso intermedio de intensidad que modifica la intensidad):
+	float intensidadAmbiental = 0.1f;
+	vec3 ambient = intensidadAmbiental * vec3(texture(elMaterial.diffuse, textureCoords));
+	
+	//4.Calculo Iluminacion difusa:
+	vec3 norm = normalize(Normal); //Normalizar la normal de la cara del cubo.
+	vec3 lightDir = normalize(lightPosition - FragPos); //Obtener vector direccion NORMALIZADO de la luz.
+	float diff = max(dot(norm, lightDir), 0.0); //El dot product entre la normal y la direccion de la luz nos da la intensidad de la luz diusa (El angulo entre los 2 vectores previos). La funcion max se asegura de que el resultado no sea negativo (Color negativo wtf).
+	vec3 diffuse = diff * vec3(texture(elMaterial.diffuse, textureCoords));
+	
+	//5.Calculo Iluminacion especular:
+	float specularStrength = 0.5f;
+	vec3 viewDir = normalize(viewPos - FragPos); //Vector entre el fragmento y la posicion de la camara, es el vector que nos falta para la iluminacion especular.
+	vec3 reflectDir = reflect(-lightDir, norm); //Es el vector que refleja la luz simetricamente a la normal (esto se cnsigue con la funcion reflect especificando vector y normal.) la direccion de la luz es negativa ya que el reflejo PROVIENE del fragmento.
+	float spec = pow(max(dot(viewDir, reflectDir), 0.0f), 32); //Como en difusa, el valor que queremos no debe ser negativo, y lo obtenemos calculando el angulo entre el vector viewDir y el reflectDir.
+	vec3 specular = specularStrength * spec * vec3(texture(elMaterial.specular, textureCoords));
+	
+	//APLICAR ILUMINACION COMO COLOR:
+	//color = vec4(ambientResult, 1.0f); //Aplicar iluminacion ambiental unicamente
+    //color = vec4(diffuseResult, 1.0f); //Aplicar iluminacion difusa unicamente
+	color = vec4(ambient + diffuse + specular, 1.0f);
+}
