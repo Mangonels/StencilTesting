@@ -555,7 +555,7 @@ toStencil selectPokemon(glm::vec3 camPos, glm::vec3 camDir) {
 	float radius = 0.75f;
 
 	//camDir*(camPos-BALLPOS)^2 - glm::dot(camPos,BALLPOS)^2 - radius^2
-	printf("%f, %f, %f\n", camPos.x, camPos.y, camPos.z);
+//	printf("%f, %f, %f\n", camPos.x, camPos.y, camPos.z);
 	//sqrt(camDir*(camPos - BALLPOS)) - sqrt(glm::dot(camPos, BALLPOS)) - sqrt(radius)
 	glm::vec3 charmanderPos = glm::vec3(1.6f, 5.f, -6.2f);
 	glm::vec3 squirtlePos = glm::vec3(-1.7f, 5.f, -6.2f);
